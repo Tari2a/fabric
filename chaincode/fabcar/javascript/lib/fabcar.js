@@ -153,6 +153,9 @@ class FabCar extends Contract {
         console.info('============= END : changeCarOwner ===========');
     }
     async createuser(ctx, id, firstname, lastname) {
+
+        console.info('============= Create User ===========');
+
         if (!id || !firstname || !lastname) {
             throw new Error("enter the required fields");
         }
@@ -160,14 +163,20 @@ class FabCar extends Contract {
             firstname,
             lastname
         };
-        console.info(`id: ${id}, person: ${person}`);
+        
         await ctx.stub.putState(id, Buffer.from(JSON.stringify(person)));
         console.info(ctx.stub);
+
+        console.info('============= End Create User ===========');
+
         return { userid: id, user: person };
     }
 
 
     async createLand(ctx, id, owner_id, information, forsale = false) {
+
+        console.info('============= Create Land ===========');
+
         if (!id || !information) {
             throw new Error("enter the required fields");
         }
@@ -182,8 +191,13 @@ class FabCar extends Contract {
             throw new Error(`car owner with ${owner_id} does not exist`)
         }
         if ( forsale === true || forsale === false || !forsale ) {
+
+            console.info('============= Middle Create Land ===========');
+
             await ctx.stub.putState(id, Buffer.from(JSON.stringify(land)));
             console.info(ctx.stub);
+
+            console.info('============= End Create Land ===========');
             return {landid : id , userid :owner_id};
         }
         else{
@@ -193,19 +207,38 @@ class FabCar extends Contract {
 
     async sellingLand(ctx, olduserId, newuserId, landid) {
 
+
+        console.info('============= Selling Land ===========');
+
         const checkLand = await ctx.stub.getState(landid);
         if (!checkLand || checkLand.length === 0) {
             throw new Error(`${landid} does not exist`);
         }
+
+        console.info('============= Land ===========');
+        console.info(checkLand);
+
         const checkOldUser = await ctx.stub.getState(olduserId);
         if (!checkOldUser || checkOldUser.length === 0) {
             throw new Error(`${olduserId} does not exist`);
         }
+
+        console.info('============= user 1  ===========');
+        console.info(checkOldUser);
+
         const checkNewUser = await ctx.stub.getState(newuserId);
         if (!checkNewUser || checkNewUser.length === 0) {
             throw new Error(`${newuserId} does not exist`);
         }
+
+
+        console.info('============= user 2 ===========');
+        console.info(checkNewUser);
+
+        console.info('============= required land ===========');
         const land = JSON.parse(checkLand.toString());
+        console.info(land);
+
         if(land.forsale === false)
             throw new Error(`land ${landid} is not for sale`);
 
