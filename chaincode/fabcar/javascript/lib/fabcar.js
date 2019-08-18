@@ -165,7 +165,7 @@ class FabCar extends Contract {
         };
         
         await ctx.stub.putState(id, Buffer.from(JSON.stringify(person)));
-        console.info(ctx.stub);
+        console.info(person,id);
 
         console.info('============= End Create User ===========');
 
@@ -173,7 +173,7 @@ class FabCar extends Contract {
     }
 
 
-    async createLand(ctx, id, owner_id, information, forsale = false) {
+    async createLand(ctx, id, owner_id, information, forsale = 'false') {
 
         console.info('============= Create Land ===========');
 
@@ -190,12 +190,12 @@ class FabCar extends Contract {
         if (!checkOwner || checkOwner === 0) {
             throw new Error(`car owner with ${owner_id} does not exist`)
         }
-        if ( forsale === true || forsale === false || !forsale ) {
+        console.info(checkOwner);
+        if ( forsale === 'true' || forsale === 'false' || !forsale ) {
 
             console.info('============= Middle Create Land ===========');
 
             await ctx.stub.putState(id, Buffer.from(JSON.stringify(land)));
-            console.info(ctx.stub);
 
             console.info('============= End Create Land ===========');
             return {landid : id , userid :owner_id};
