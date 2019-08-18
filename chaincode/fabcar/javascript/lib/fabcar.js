@@ -162,6 +162,7 @@ class FabCar extends Contract {
         };
         console.info(`id: ${id}, person: ${person}`);
         await ctx.stub.putState(id, Buffer.from(JSON.stringify(person)));
+        console.info(ctx.stub);
         return { userid: id, user: person };
     }
 
@@ -172,7 +173,7 @@ class FabCar extends Contract {
         }
         const land = {
             information,
-            forsale,
+            forsale = false,
             owner_id
         };
         console.info('land is: ', land);
@@ -180,25 +181,38 @@ class FabCar extends Contract {
         if (!checkOwner || checkOwner === 0) {
             throw new Error(`car owner with ${owner_id} does not exist`)
         }
-        await ctx.stub.putState(id, Buffer.from(JSON.stringify(land)));
+        if ( forsale === true || forsale === false || !forsale ) {
+            await ctx.stub.putState(id, Buffer.from(JSON.stringify(land)));
+            console.info(ctx.stub);
+            return {landid : id , userid :owner_id};
+        }
+        else{
+            throw new Error("the forsale attribute must equal true or false");
+        }
     }
 
-    async sellingLand(ctx, user, landid) {
+    async sellingLand(ctx, olduserId, newuserId, landid) {
 
         const checkLand = await ctx.stub.getState(landid);
         if (!checkLand || checkLand.length === 0) {
             throw new Error(`${landid} does not exist`);
         }
-        else {
-            const land = JSON.parse(checkLand.toString());
-            if (!land.forsale || land.forsale === false) {
-                throw new Error(`${landid} is not for sale`);
-            }
-            else {
-                land.owner = user;
-                await ctx.stub.putState(landid, Buffer.from(JSON.stringify(land)));
-            }
+        const checkOldUser = await ctx.stub.getState(olduserId);
+        if (!checkOldUser || checkOldUser.length === 0) {
+            throw new Error(`${olduserId} does not exist`);
         }
+        const checkNewUser = await ctx.stub.getState(newuserId);
+        if (!checkNewUser || checkNewUser.length === 0) {
+            throw new Error(`${newuserId} does not exist`);
+        }
+        const land = JSON.parse(checkLand.toString());
+        if(land.forsale === false)
+            throw new Error(`land ${landid} is not for sale`);
+
+        land.owner = newuserId;
+        console.info(land);
+        return land;
+
     }
 }
 
