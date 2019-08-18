@@ -186,7 +186,7 @@ class FabCar extends Contract {
             owner_id
         };
         console.info('land is: ', land);
-        const checkOwner = await ctx.stub.getState(owner_id)
+        const checkOwner = await ctx.stub.getState(owner_id);
         if (!checkOwner || checkOwner === 0) {
             throw new Error(`car owner with ${owner_id} does not exist`)
         }
@@ -243,7 +243,7 @@ class FabCar extends Contract {
             throw new Error(`land ${landid} is not for sale`);
 
         land.owner = newuserId;
-        console.info(land);
+        console.info('land: ', land);
         return land;
 
     }
