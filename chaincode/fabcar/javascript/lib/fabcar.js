@@ -167,13 +167,13 @@ class FabCar extends Contract {
     }
 
 
-    async createLand(ctx, id, owner_id, information, forsale) {
+    async createLand(ctx, id, owner_id, information, forsale = false) {
         if (!id || !information) {
             throw new Error("enter the required fields");
         }
         const land = {
             information,
-            forsale = false,
+            forsale ,
             owner_id
         };
         console.info('land is: ', land);
