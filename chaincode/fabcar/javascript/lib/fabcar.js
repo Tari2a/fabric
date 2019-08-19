@@ -187,11 +187,11 @@ class FabCar extends Contract {
         };
         console.info('land is: ', land);
         const checkOwner = await ctx.stub.getState(owner_id);
-        const owner = JSON.parse(checkOwner.toString());
         
-        if (!owner || owner === 0) {
+        if (!checkOwner || checkOwner === 0) {
             throw new Error(`car owner with ${owner_id} does not exist`)
         }
+        const owner = JSON.parse(checkOwner.toString());
         console.info(owner);
         if ( forsale === 'true' || forsale === 'false' || !forsale ) {
 
