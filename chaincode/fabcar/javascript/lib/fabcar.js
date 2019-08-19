@@ -189,7 +189,7 @@ class FabCar extends Contract {
         const checkOwner = await ctx.stub.getState(owner_id);
         
         if (!checkOwner || checkOwner === 0) {
-            throw new Error(`car owner with ${owner_id} does not exist`)
+            throw new Error(`car owner with ${owner_id} does not exist`);
         }
         const owner = JSON.parse(checkOwner.toString());
         console.info(owner);
